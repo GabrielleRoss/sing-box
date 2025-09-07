@@ -21,6 +21,7 @@ var errInsecureUnused = E.New("tls: insecure unused")
 
 type STDServerConfig struct {
 	config          *tls.Config
+	ktls            bool
 	logger          log.Logger
 	acmeService     adapter.SimpleLifecycle
 	certificate     []byte
@@ -70,7 +71,12 @@ func (c *STDServerConfig) Server(conn net.Conn) (Conn, error) {
 func (c *STDServerConfig) Clone() Config {
 	return &STDServerConfig{
 		config: c.config.Clone(),
+		ktls:   c.ktls,
 	}
+}
+
+func (c *STDServerConfig) KTLSEnabled() bool {
+	return c.ktls
 }
 
 func (c *STDServerConfig) Start() error {
